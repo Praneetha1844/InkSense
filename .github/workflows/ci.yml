@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Resolve dependencies without installing them
+        run: pip install --dry-run -r requirements.txt
+      - name: Validate notebooks
+        run: |
+          pip install nbformat
+          python - <<'PY'
+          import glob, nbformat
+          paths = sorted(glob.glob("notebooks/*.ipynb"))
+          assert paths, "no notebooks found"
+          for p in paths:
+              nbformat.validate(nbformat.read(p, as_version=4))
+              print("ok", p)
+          PY
