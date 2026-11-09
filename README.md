@@ -72,6 +72,7 @@ The notebook reads `../data/A_Z Handwritten Data.csv`, relative to the `notebook
 
 - Trained for a single epoch, with no pixel scaling, no data augmentation and no hyperparameter search.
 - The split has no fixed random seed, so results are not exactly reproducible.
+- The CSV has no header row, but `pd.read_csv` is called with defaults, so the first image row becomes the column names, one sample is dropped, and the label column is addressed as `"0"`. Using `header=None` would be more robust.
 - The 20% held-out set is used as validation data. There is no separate test set.
 - Only overall accuracy is reported. There is no per-class accuracy or confusion matrix.
 - OpenCV and several unused imports were removed from the notebook. The sample-image figure is unchanged because the removed threshold result was never used.

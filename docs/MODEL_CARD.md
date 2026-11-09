@@ -13,7 +13,7 @@ A small convolutional neural network (Keras) that classifies a 28x28 grayscale i
 
 ## Data
 
-*A-Z Handwritten Alphabets in CSV format* (Kaggle), 102,629 images. Not included here. See [data/README.md](../data/README.md). Licence not documented in this repository.
+*A-Z Handwritten Alphabets in CSV format* (Kaggle). The notebook's saved output shows 102,629 images after loading and splitting, which may differ from the full published file. Not included here. See [data/README.md](../data/README.md). Licence not documented in this repository.
 
 ## Model
 
