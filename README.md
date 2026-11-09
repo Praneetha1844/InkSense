@@ -2,7 +2,7 @@
 
 Handwritten letter recognition (A to Z) with a small convolutional neural network in Keras.
 
-![license](https://img.shields.io/badge/license-MIT-green) ![ci](https://github.com/Praneetha1844/CodeAlpha_HandwrittenCharacter_Detection/actions/workflows/ci.yml/badge.svg)
+![license](https://img.shields.io/badge/license-MIT-green) ![ci](https://github.com/Praneetha1844/InkSense/actions/workflows/ci.yml/badge.svg)
 
 ## Problem
 
@@ -30,6 +30,7 @@ flowchart LR
 - **Architecture:** `Conv2D(32, 3x3)` then `MaxPool`, `Conv2D(64, 3x3, same)` then `MaxPool`, `Conv2D(128, 3x3, valid)` then `MaxPool`, `Flatten`, `Dense(64)`, `Dense(128)`, `Dense(26, softmax)`. ReLU activations.
 - **Training:** Adam (learning rate 0.001), categorical cross-entropy, 1 epoch.
 - **Exploration:** a class-count bar chart and a 3x3 grid of sample images.
+- **Follow-up (unexecuted):** the notebook ends with cells that check for non-finite values and re-train on 0-1 scaled inputs with a fixed seed, a stratified split, a per-class report and a plot of real predictions. They have no saved output, so no results are claimed.
 
 ## Results
 
@@ -40,13 +41,13 @@ From the saved notebook output (1 epoch, the held-out 20% used as validation dat
 | First training cell | 95.53% | 97.96% | `nan` |
 | Second training cell | 95.71% | 98.06% | `nan` |
 
-The notebook trains the same architecture twice with identical settings. The validation loss is reported as `nan` in both runs, and its cause has not been investigated, so treat the accuracy figures with caution.
+The notebook trains the same architecture twice with identical settings. The validation loss is reported as `nan` in both runs. A likely factor is the unscaled 0-255 input, but that is a hypothesis and the cause is not confirmed, so treat the accuracy figures with caution. See the [model card](docs/MODEL_CARD.md).
 
 ## How to run
 
 ```bash
-git clone https://github.com/Praneetha1844/CodeAlpha_HandwrittenCharacter_Detection.git
-cd CodeAlpha_HandwrittenCharacter_Detection
+git clone https://github.com/Praneetha1844/InkSense.git
+cd InkSense
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt jupyter
 # download "A_Z Handwritten Data.csv" into data/
@@ -60,7 +61,8 @@ The notebook reads `../data/A_Z Handwritten Data.csv`, relative to the `notebook
 ```
 .
 ├── notebooks/inksense_az_cnn.ipynb   # exploration, training, evaluation
-├── data/                             # place the CSV here (not tracked)
+├── data/                             # place the CSV here (not tracked); see data/README.md
+├── docs/MODEL_CARD.md                # intended use, limits and risks
 ├── requirements.txt
 ├── .github/workflows/ci.yml          # validates notebooks, resolves dependencies
 └── LICENSE
@@ -72,15 +74,20 @@ The notebook reads `../data/A_Z Handwritten Data.csv`, relative to the `notebook
 - The split has no fixed random seed, so results are not exactly reproducible.
 - The 20% held-out set is used as validation data. There is no separate test set.
 - Only overall accuracy is reported. There is no per-class accuracy or confusion matrix.
-- The saved output of the last figure cell was cleared. It had titled the true labels "Prediction". It now titles them "Label", and the notebook does not yet plot the model's own predictions.
+- OpenCV and several unused imports were removed from the notebook. The sample-image figure is unchanged because the removed threshold result was never used.
+- The saved output of the last original figure cell was cleared. It had titled the true labels "Prediction". It now titles them "Label", and the notebook does not yet plot the model's own predictions.
 - The model recognises single capital letters on clean 28x28 images. It was not tested on lowercase letters, digits, whole words or photographs.
 
 ## Future work
 
-- Scale inputs, add augmentation and train for more epochs with early stopping.
-- Find and fix the `nan` validation loss.
-- Add a held-out test set, a confusion matrix and plots of real model predictions.
+- Run the follow-up cells, confirm what causes the `nan` validation loss and report the results with the exact setup.
+- Add augmentation, more epochs and early stopping.
+- Add a separate held-out test set and a confusion matrix.
 - Wrap inference in a small tested module and a demo.
+
+## Model card
+
+See [docs/MODEL_CARD.md](docs/MODEL_CARD.md) for intended use, risks and limits.
 
 ## License
 
